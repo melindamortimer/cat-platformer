@@ -21,7 +21,7 @@ body {
     position: absolute;
     width: 32px;
     height: 32px;
-    background-image: url('images/cat_sprite_sheet2.png');
+    background-image: url('images/cat_sprite_sheet.png');
     background-repeat: no-repeat;
     background-size: auto;
     bottom: 0;
@@ -50,7 +50,7 @@ body {
   #preview {
     width: 32px;
     height: 32px;
-    background-image: url('images/cat_sprite_sheet2.png');
+    background-image: url('images/cat_sprite_sheet.png');
     background-repeat: no-repeat;
     background-size: auto;
     border: 0px solid transparent;

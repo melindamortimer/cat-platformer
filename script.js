@@ -49,9 +49,24 @@ function setAction(newAction) {
 }
 
 function updatePosition() {
+  // Horizontal movement
+  if (movingLeft) {
+    velocityX = -3;
+  } else if (movingRight) {
+    velocityX = 3;
+  } else {
+    velocityX = 0;
+  }
+
+  x += velocityX;
+  x = Math.max(0, Math.min(x, gameArea.clientWidth - character.clientWidth));
+  character.style.left = x + "px";
+
+  // Vertical movement
   if (isJumping) {
     velocityY -= gravity;
     y += velocityY;
+
     if (y <= groundLevel) {
       y = groundLevel;
       isJumping = false;
@@ -59,6 +74,7 @@ function updatePosition() {
     character.style.bottom = y + "px";
   }
 }
+
 
 function animateCharacter() {
   updatePosition();
@@ -73,33 +89,48 @@ function animateCharacter() {
   requestAnimationFrame(animateCharacter);
 }
 
+let velocityX = 0;
+let movingLeft = false;
+let movingRight = false;
+
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowLeft") {
-    setAction("left");
-    x -= 5;
+    if (!movingLeft) {
+      setAction("left");
+      updateSpriteFrame(); // ✅ Immediately show left-facing sprite
+    }
+    movingLeft = true;
   } else if (e.code === "ArrowRight") {
-    setAction("right");
-    x += 5;
+    if (!movingRight) {
+      setAction("right");
+      updateSpriteFrame(); // ✅ Immediately show right-facing sprite
+    }
+    movingRight = true;
   } else if (e.code === "ArrowUp") {
     setAction("up");
-    y += 5;
+    updateSpriteFrame();
   } else if (e.code === "ArrowDown") {
     setAction("down");
-    y -= 5;
+    updateSpriteFrame();
   } else if (e.code === "Space" && !isJumping) {
     isJumping = true;
     velocityY = 10;
   }
-
-  x = Math.max(0, Math.min(x, gameArea.clientWidth - character.clientWidth));
-  character.style.left = x + "px";
 });
 
-document.addEventListener("keyup", () => {
-  if (!isJumping) {
-    currentFrame = 1; // idle
+
+document.addEventListener("keyup", (e) => {
+  if (e.code === "ArrowLeft") {
+    movingLeft = false;
+  } else if (e.code === "ArrowRight") {
+    movingRight = false;
+  }
+
+  if (!movingLeft && !movingRight && !isJumping) {
+    currentFrame = 1; // idle frame
   }
 });
+
 
 // --- Cat preview animation ---
 let previewFrame = 0;
